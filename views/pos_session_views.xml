@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        
+        <record model="ir.ui.view" id="pos_session_billing_tree">
+            <field name="name">pos.session.billing.tree</field>
+            <field name="model">pos.session</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_session_tree"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//tree" position="inside">
+                    <field name="cash_register_total_entry_encoding" string="Cash"/>
+                    <field name="bank_amount" string="Banks"/>
+                    <field name="daily_billing" string="TOTAL"/>
+                </xpath>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="pos_session_billing">
+            <field name="name">pos.session.billing</field>
+            <field name="model">pos.session</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_session_form"/>
+            <field name="arch" type="xml">
+
+
+                <xpath expr="//label[@for='cash_register_balance_end']" position="attributes">
+                    <attribute name="attrs">{'invisible' : [('state', 'in', ['opening_control', 'closed'])]}</attribute>
+                </xpath>
+
+                <field name="cash_register_balance_end" position="attributes">
+                    <attribute name="attrs">{'invisible' : [('state', 'in', ['opening_control', 'closed'])]}</attribute>
+                </field>
+                
+                <field name="cash_register_balance_end" position="after">
+                    <label for="bank_amount" attrs="{'invisible' : [('state', '!=', 'closed')]}" string="+ Bank Transactions" class="oe_force_bold oe_opening_total"/>
+                    <field name="bank_amount" attrs="{'invisible' : [('state', '!=', 'closed')]}" nolabel="1" class="oe_bold oe_pos_total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <label for="daily_billing" attrs="{'invisible' : [('state', '!=', 'closed')]}" string="= DAILY BILLING" class="oe_subtotal_footer_separator"/>
+                    <field name="daily_billing" attrs="{'invisible' : [('state', '!=', 'closed')]}" nolabel="1" class="oe_bold oe_pos_total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                </field>
+            </field>
+        </record> 
+
+
+  </data>
+</odoo>
